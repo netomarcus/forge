@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>FORGE</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="FORGE">
+<meta name="theme-color" content="#0a0a0f">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='100' fill='%230a0a0f'/%3E%3Crect x='0' y='0' width='20' height='512' fill='%23ff3c5a'/%3E%3Ctext x='270' y='340' font-family='Arial Black' font-weight='900' font-size='260' fill='white' text-anchor='middle'%3EFOR%3C/text%3E%3Ctext x='270' y='510' font-family='Arial Black' font-weight='900' font-size='260' fill='%23ff3c5a' text-anchor='middle'%3EGE%3C/text%3E%3C/svg%3E">
+<script>
+(function(){
+  const m={name:"FORGE · Guia de Treino",short_name:"FORGE",start_url:"./forge_v3.html",display:"standalone",background_color:"#0a0a0f",theme_color:"#0a0a0f",orientation:"portrait",icons:[{src:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='100' fill='%230a0a0f'/%3E%3Crect x='0' y='0' width='20' height='512' fill='%23ff3c5a'/%3E%3Ctext x='270' y='340' font-family='Arial Black' font-weight='900' font-size='260' fill='white' text-anchor='middle'%3EFOR%3C/text%3E%3Ctext x='270' y='510' font-family='Arial Black' font-weight='900' font-size='260' fill='%23ff3c5a' text-anchor='middle'%3EGE%3C/text%3E%3C/svg%3E",sizes:"512x512",type:"image/svg+xml",purpose:"any maskable"}]};
+  const b=new Blob([JSON.stringify(m)],{type:'application/json'});
+  const l=document.createElement('link');l.rel='manifest';l.href=URL.createObjectURL(b);
+  document.currentScript.parentNode.appendChild(l);
+})();
+if('serviceWorker' in navigator){
+  const c=`const CACHE='forge-v3';self.addEventListener('install',e=>{self.skipWaiting();});self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!==CACHE).map(x=>caches.delete(x)))));self.clients.claim();});self.addEventListener('fetch',e=>{e.respondWith(fetch(e.request).catch(()=>caches.match(e.request)));});`;
+  navigator.serviceWorker.register(URL.createObjectURL(new Blob([c],{type:'text/javascript'}))).catch(()=>{});
+}
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;600;700;900&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0a0f;--surface:#12121a;--surface2:#1a1a26;--border:#2a2a3a;
+  --accent:#ff3c5a;--blue:#3a7cff;--green:#2ecc7a;--orange:#ff7c3a;
+  --purple:#8b5cf6;--text:#f0f0f5;--muted:#666680;
+  --fd:'Barlow Condensed',sans-serif;--fb:'Barlow',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{background:var(--bg);color:var(--text);font-family:var(--fb);min-height:100vh;overflow-x:hidden}
+.screen{display:none;min-height:100vh;flex-direction:column}
+.screen.active{display:flex}
+
+/* SPLASH */
+#splash{position:fixed;inset:0;z-index:9999;background:#0a0a0f;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .5s}
+.splash-bar{width:4px;height:0;background:linear-gradient(to bottom,#ff3c5a,transparent);margin-bottom:16px;animation:sBar .8s ease forwards}
+.splash-logo{font-family:'Arial Black',sans-serif;font-weight:900;font-size:72px;line-height:1;letter-spacing:-2px;color:#f0f0f5;animation:sFade .6s .3s ease both;opacity:0}
+.splash-sub{font-size:11px;letter-spacing:6px;color:#666680;text-transform:uppercase;margin-top:8px;animation:sFade .6s .5s ease both;opacity:0}
+.splash-prog{width:40px;height:2px;background:#2a2a3a;border-radius:1px;margin-top:40px;overflow:hidden;animation:sFade .4s .6s ease both;opacity:0}
+.splash-fill{height:100%;background:#ff3c5a;animation:sLoad 1s .7s ease forwards;width:0}
+@keyframes sBar{to{height:80px;opacity:1}}
+@keyframes sFade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes sLoad{to{width:100%}}
+
+/* HOME */
+#home{position:relative;overflow:hidden}
+.home-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% -10%,rgba(255,60,90,.18) 0%,transparent 70%),radial-gradient(ellipse 60% 40% at 90% 80%,rgba(58,124,255,.12) 0%,transparent 60%);pointer-events:none}
+.home-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,60,90,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,60,90,.04) 1px,transparent 1px);background-size:40px 40px;pointer-events:none}
+.home-content{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;padding:28px 20px 24px}
+.logo{font-family:var(--fd);font-weight:900;font-size:clamp(60px,16vw,100px);letter-spacing:-2px;line-height:1;text-align:center}
+.logo span{color:var(--accent)}
+.logo-sub{font-family:var(--fd);font-weight:300;font-size:clamp(10px,2.8vw,14px);letter-spacing:6px;text-transform:uppercase;color:var(--muted);text-align:center;margin-top:2px;margin-bottom:14px}
+.tab-bar{display:flex;background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:18px;width:100%;max-width:440px}
+.tab{flex:1;padding:9px;text-align:center;font-family:var(--fd);font-weight:700;font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);cursor:pointer;transition:all .2s;border:none;background:none}
+.tab.active{background:var(--accent);color:#fff}
+.day-cards{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;max-width:440px;margin-bottom:14px}
+.day-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:13px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden;animation:fadeUp .4s ease both}
+.day-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--card-color,var(--accent))}
+.day-card:active{transform:scale(.97)}
+.day-card:hover{border-color:var(--card-color,var(--accent));background:var(--surface2)}
+.day-card-label{font-family:var(--fd);font-weight:700;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--card-color,var(--accent));margin-bottom:3px}
+.day-card-name{font-family:var(--fd);font-weight:700;font-size:19px;line-height:1.1}
+.day-card-focus{font-size:10px;color:var(--muted);margin-top:3px;line-height:1.3}
+.day-card-badge{position:absolute;top:9px;right:9px;background:var(--card-color,var(--accent));color:#fff;border-radius:20px;padding:2px 7px;font-family:var(--fd);font-weight:700;font-size:10px}
+.day-card-sat{grid-column:1/-1}
+
+/* HISTORY */
+.history-list{width:100%;max-width:440px;display:flex;flex-direction:column;gap:10px}
+.history-empty{color:var(--muted);font-size:13px;text-align:center;padding:40px 0}
+.history-item{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:13px;position:relative;overflow:hidden}
+.history-item::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--card-color,var(--accent))}
+.history-item-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:7px}
+.history-day{font-family:var(--fd);font-weight:700;font-size:15px}
+.history-date{font-size:11px;color:var(--muted);text-align:right}
+.history-stats{display:flex;gap:10px;flex-wrap:wrap}
+.hstat{font-size:11px;color:var(--muted)}.hstat span{color:var(--text);font-weight:600}
+.history-note{margin-top:7px;font-size:11px;color:var(--muted);font-style:italic;border-left:2px solid var(--border);padding-left:7px;line-height:1.4}
+.btn-pdf{width:100%;padding:11px;background:var(--accent);border:none;border-radius:8px;color:#fff;font-family:var(--fd);font-weight:700;font-size:13px;letter-spacing:1px;cursor:pointer;margin-top:12px;transition:opacity .2s}
+.btn-clear{background:none;border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:8px 14px;font-size:12px;cursor:pointer;margin-top:8px;width:100%;transition:all .2s}
+
+/* SESSION HEADER */
+.session-header{background:var(--surface);border-bottom:1px solid var(--border);padding:11px 15px;display:flex;align-items:center;gap:11px;position:sticky;top:0;z-index:100}
+.btn-back{background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;padding:4px;line-height:1}
+.session-header-info{flex:1}
+.session-day-label{font-family:var(--fd);font-weight:700;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--session-color,var(--accent))}
+.session-day-name{font-family:var(--fd);font-weight:700;font-size:17px;line-height:1.1}
+.elapsed-badge{background:rgba(18,18,26,.9);border:1px solid var(--border);border-radius:20px;padding:5px 11px;font-family:var(--fd);font-weight:700;font-size:12px;color:var(--muted);display:flex;align-items:center;gap:5px}
+.elapsed-dot{width:5px;height:5px;border-radius:50%;background:var(--green);animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.session-body{flex:1;padding:13px;display:flex;flex-direction:column;gap:10px}
+
+/* PHASE BLOCKS */
+.phase-block{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.phase-header{padding:11px 13px;display:flex;align-items:center;gap:9px;cursor:pointer;user-select:none}
+.phase-icon{font-size:15px}
+.phase-title{font-family:var(--fd);font-weight:700;font-size:13px;letter-spacing:1px;text-transform:uppercase;flex:1}
+.phase-chevron{color:var(--muted);font-size:12px;transition:transform .2s}
+.phase-block.open .phase-chevron{transform:rotate(180deg)}
+.phase-content{display:none;padding:0 13px 13px}
+.phase-block.open .phase-content{display:block}
+
+/* WARMUP */
+.warmup-item{display:flex;align-items:center;gap:9px;padding:8px 0;border-bottom:1px solid var(--border)}
+.warmup-item:last-child{border-bottom:none}
+.warmup-check{width:22px;height:22px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:11px;cursor:pointer;flex-shrink:0;transition:all .2s}
+.warmup-check.done{background:var(--green);border-color:var(--green)}
+.warmup-text{font-size:12px;flex:1}
+.warmup-timer-btn{background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:7px;padding:5px 9px;font-size:11px;font-family:var(--fd);font-weight:600;cursor:pointer;white-space:nowrap;transition:all .2s}
+.warmup-timer-btn.running{border-color:var(--green);color:var(--green)}
+
+/* EXERCISE CARDS */
+.exercise-card{background:var(--surface2);border:1px solid var(--border);border-radius:12px;margin-bottom:8px;overflow:hidden;transition:border-color .2s}
+.exercise-card.active{border-color:var(--session-color,var(--accent))}
+.exercise-card-header{padding:10px 12px;display:flex;align-items:center;gap:9px;cursor:pointer}
+.ex-number{width:25px;height:25px;border-radius:50%;background:var(--border);display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-weight:700;font-size:11px;flex-shrink:0;transition:background .2s}
+.exercise-card.done .ex-number{background:var(--green)}
+.ex-name{font-weight:600;font-size:13px;flex:1;line-height:1.2}
+.ex-sets-reps{font-family:var(--fd);font-weight:700;font-size:11px;color:var(--muted)}
+.exercise-card-body{display:none;padding:0 12px 12px}
+.exercise-card.open .exercise-card-body{display:block}
+
+/* POSTURE TIP */
+.ex-obs{font-size:11px;color:var(--muted);background:rgba(255,255,255,.03);border-left:3px solid var(--session-color,var(--accent));padding:7px 9px;border-radius:0 6px 6px 0;margin-bottom:6px;line-height:1.45}
+.posture-tip{background:rgba(58,124,255,.08);border:1px solid rgba(58,124,255,.25);border-radius:8px;padding:8px 10px;margin-bottom:10px;cursor:pointer}
+.posture-tip-header{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;color:var(--blue)}
+.posture-tip-body{display:none;margin-top:7px;font-size:11px;color:#aab8d4;line-height:1.55}
+.posture-tip.open .posture-tip-body{display:block}
+.posture-tip-chevron{margin-left:auto;font-size:10px;transition:transform .2s;color:var(--blue)}
+.posture-tip.open .posture-tip-chevron{transform:rotate(180deg)}
+
+/* SETS */
+.sets-grid{display:flex;flex-direction:column;gap:5px}
+.set-row{display:grid;grid-template-columns:28px 1fr 1fr auto;gap:5px;align-items:center}
+.set-label{font-family:var(--fd);font-weight:700;font-size:11px;color:var(--muted);text-align:center}
+.set-input{background:var(--surface);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:7px 6px;font-size:13px;font-family:var(--fb);width:100%;text-align:center;transition:border-color .2s}
+.set-input:focus{outline:none;border-color:var(--session-color,var(--accent))}
+.set-input::placeholder{color:var(--muted);font-size:10px}
+.set-done-btn{width:29px;height:29px;border-radius:50%;border:2px solid var(--border);background:none;color:var(--muted);cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0}
+.set-done-btn.done{background:var(--green);border-color:var(--green);color:#fff}
+
+/* REST TIMER */
+.rest-timer-wrap{margin-top:9px;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:8px 11px;display:flex;align-items:center;gap:9px}
+.rest-display{font-family:var(--fd);font-weight:900;font-size:24px;color:var(--session-color,var(--accent));min-width:46px}
+.rest-controls{display:flex;gap:5px;flex-wrap:wrap}
+.rest-btn{background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:7px;padding:5px 10px;font-family:var(--fd);font-weight:600;font-size:11px;cursor:pointer;transition:all .2s}
+.rest-btn.primary{background:var(--session-color,var(--accent));border-color:var(--session-color,var(--accent))}
+.rest-btn.running{background:none;border-color:var(--green);color:var(--green)}
+.notes-section{margin-top:9px}
+.notes-label{font-size:10px;text-transform:uppercase;letter-spacing:2px;color:var(--muted);margin-bottom:5px;display:block}
+.notes-textarea{width:100%;background:var(--surface);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:9px;font-size:12px;font-family:var(--fb);resize:none;min-height:60px;transition:border-color .2s}
+.notes-textarea:focus{outline:none;border-color:var(--muted)}
+.lca-tag{display:flex;align-items:center;gap:6px;background:rgba(255,170,0,.12);border:1px solid rgba(255,170,0,.4);border-radius:8px;padding:6px 10px;font-size:11px;color:#ffaa00;margin-bottom:8px}
+
+/* CARDIO BLOCK */
+.cardio-wrap{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.cardio-mode-bar{display:flex;background:var(--surface2);border-bottom:1px solid var(--border)}
+.cardio-mode-btn{flex:1;padding:9px;text-align:center;font-family:var(--fd);font-weight:700;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);cursor:pointer;border:none;background:none;transition:all .2s}
+.cardio-mode-btn.active{color:var(--session-color,var(--accent));border-bottom:2px solid var(--session-color,var(--accent))}
+.cardio-panel{display:none;padding:13px}
+.cardio-panel.active{display:block}
+.cardio-desc{font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.4}
+.cardio-tip{font-size:11px;color:#4a9;background:rgba(40,180,100,.08);border:1px solid rgba(40,180,100,.2);border-radius:7px;padding:6px 9px;margin-bottom:10px;line-height:1.4}
+.cardio-display{font-family:var(--fd);font-weight:900;font-size:52px;text-align:center;color:var(--text);letter-spacing:-2px;line-height:1;margin:4px 0 12px}
+.cardio-controls{display:flex;gap:8px;justify-content:center;margin-bottom:10px}
+.cardio-btn{flex:1;max-width:110px;padding:11px;border-radius:10px;font-family:var(--fd);font-weight:700;font-size:13px;cursor:pointer;border:none;transition:all .2s}
+.cardio-btn.start{background:var(--green);color:#0a0a0f}
+.cardio-btn.pause{background:var(--orange);color:#0a0a0f}
+.cardio-btn.reset{background:var(--surface2);border:1px solid var(--border);color:var(--muted)}
+
+/* HIIT */
+.hiit-phase-display{text-align:center;margin:4px 0 8px}
+.hiit-phase-label{font-family:var(--fd);font-weight:700;font-size:13px;letter-spacing:2px;text-transform:uppercase;margin-bottom:4px}
+.hiit-round-label{font-size:11px;color:var(--muted)}
+.hiit-progress{width:100%;height:5px;background:var(--border);border-radius:3px;overflow:hidden;margin-bottom:12px}
+.hiit-progress-fill{height:100%;border-radius:3px;transition:width .3s linear}
+.hiit-presets{display:flex;flex-direction:column;gap:7px;margin-bottom:12px}
+.hiit-preset{background:var(--surface2);border:1px solid var(--border);border-radius:9px;padding:10px 12px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:10px}
+.hiit-preset:hover,.hiit-preset.selected{border-color:var(--session-color,var(--accent));background:rgba(255,60,90,.06)}
+.hiit-preset-name{font-family:var(--fd);font-weight:700;font-size:13px;flex:1}
+.hiit-preset-info{font-size:11px;color:var(--muted)}
+.hiit-custom{background:var(--surface2);border:1px solid var(--border);border-radius:9px;padding:11px 12px;margin-bottom:12px}
+.hiit-custom-title{font-family:var(--fd);font-weight:700;font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:9px}
+.hiit-custom-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-bottom:7px}
+.hiit-input-group{display:flex;flex-direction:column;gap:3px}
+.hiit-input-label{font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--muted)}
+.hiit-input{background:var(--surface);border:1px solid var(--border);color:var(--text);border-radius:7px;padding:7px 8px;font-size:14px;font-family:var(--fb);width:100%;text-align:center;transition:border-color .2s}
+.hiit-input:focus{outline:none;border-color:var(--session-color,var(--accent))}
+.btn-apply-hiit{width:100%;padding:9px;background:var(--session-color,var(--accent));border:none;border-radius:8px;color:#fff;font-family:var(--fd);font-weight:700;font-size:13px;cursor:pointer;margin-top:4px}
+
+/* SATURDAY MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.7);align-items:flex-end}
+.modal-overlay.open{display:flex}
+.modal-sheet{background:var(--surface);border-radius:20px 20px 0 0;padding:20px;width:100%;max-height:85vh;overflow-y:auto}
+.modal-handle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 16px}
+.modal-title{font-family:var(--fd);font-weight:900;font-size:22px;margin-bottom:6px}
+.modal-sub{font-size:12px;color:var(--muted);margin-bottom:18px;line-height:1.5}
+.sat-option{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
+.sat-option::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--card-color,var(--accent))}
+.sat-option:hover{border-color:var(--card-color,var(--accent))}
+.sat-option-title{font-family:var(--fd);font-weight:700;font-size:16px;margin-bottom:3px}
+.sat-option-desc{font-size:11px;color:var(--muted);line-height:1.4}
+.sat-option-duration{position:absolute;top:12px;right:12px;background:var(--card-color,var(--accent));color:#fff;border-radius:20px;padding:2px 8px;font-family:var(--fd);font-weight:700;font-size:10px}
+.modal-close{width:100%;padding:13px;background:none;border:1px solid var(--border);border-radius:12px;color:var(--muted);font-family:var(--fd);font-weight:700;font-size:14px;cursor:pointer;margin-top:6px}
+
+/* SUMMARY */
+#summary{padding:22px 20px;align-items:center}
+.summary-icon{font-size:56px;margin-bottom:6px}
+.summary-title{font-family:var(--fd);font-weight:900;font-size:44px;text-align:center;line-height:1;margin-bottom:4px}
+.summary-sub{color:var(--muted);font-size:12px;text-align:center;margin-bottom:20px}
+.summary-stats{display:grid;grid-template-columns:1fr 1fr;gap:9px;width:100%;max-width:380px;margin-bottom:18px}
+.stat-box{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:13px;text-align:center}
+.stat-value{font-family:var(--fd);font-weight:900;font-size:28px;color:var(--accent)}
+.stat-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-top:2px}
+.summary-notes{width:100%;max-width:380px;margin-bottom:18px}
+.summary-notes-title{font-family:var(--fd);font-weight:700;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.summary-note-item{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:10px;margin-bottom:6px;font-size:12px;line-height:1.5}
+.summary-note-day{font-family:var(--fd);font-weight:700;font-size:10px;color:var(--muted);margin-bottom:3px}
+.summary-btns{width:100%;max-width:380px;display:flex;flex-direction:column;gap:9px}
+.btn-home{width:100%;padding:13px;border-radius:12px;background:var(--surface);border:1px solid var(--border);color:var(--text);font-family:var(--fd);font-weight:700;font-size:14px;cursor:pointer}
+.btn-pdf-sum{width:100%;padding:13px;border-radius:12px;background:var(--blue);border:none;color:#fff;font-family:var(--fd);font-weight:700;font-size:14px;cursor:pointer;letter-spacing:1px}
+
+/* INSTALL BANNER */
+#installBanner{display:none;position:fixed;bottom:0;left:0;right:0;z-index:1000;background:#12121a;border-top:1px solid #2a2a3a;padding:13px 15px;flex-direction:row;align-items:center;gap:11px}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.day-card:nth-child(1){animation-delay:.04s}.day-card:nth-child(2){animation-delay:.08s}
+.day-card:nth-child(3){animation-delay:.12s}.day-card:nth-child(4){animation-delay:.16s}
+.day-card:nth-child(5){animation-delay:.20s}.day-card:nth-child(6){animation-delay:.24s}
+.finish-wrap{padding:13px}
+.btn-finish{width:100%;padding:15px;background:var(--session-color,var(--accent));border:none;border-radius:13px;color:#fff;font-family:var(--fd);font-weight:700;font-size:16px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:opacity .2s,transform .15s}
+.btn-finish:active{opacity:.85;transform:scale(.99)}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+</style>
+</head>
+<body>
+
+<!-- SPLASH -->
+<div id="splash">
+  <div class="splash-bar"></div>
+  <div class="splash-logo">FOR<span style="color:#ff3c5a">GE</span></div>
+  <div class="splash-sub">Guia de Treino</div>
+  <div class="splash-prog"><div class="splash-fill"></div></div>
+</div>
+
+<!-- SATURDAY MODAL -->
+<div class="modal-overlay" id="satModal">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title">☀️ Sábado</div>
+    <div class="modal-sub">Escolha o modo baseado na sua semana. Se fez os 5 treinos, opte por Recuperação Ativa. Se perdeu algum, use Reposição.</div>
+    <div class="sat-option" style="--card-color:#2ecc7a" onclick="startSatSession('recovery')">
+      <div class="sat-option-title">🌿 Recuperação Ativa</div>
+      <div class="sat-option-desc">Mobilidade profunda + cardio zona 1 suave. Ideal após semana completa. Regenera sem sobrecarregar.</div>
+      <div class="sat-option-duration">45 min</div>
+    </div>
+    <div class="sat-option" style="--card-color:#3a7cff" onclick="showReposeOptions()">
+      <div class="sat-option-title">🔁 Reposição</div>
+      <div class="sat-option-desc">Refazer o dia que você pulou durante a semana.</div>
+      <div class="sat-option-duration">Variável</div>
+    </div>
+    <div class="sat-option" style="--card-color:#ff7c3a" onclick="startSatSession('fullbody')">
+      <div class="sat-option-title">⚡ Full Body Expresso</div>
+      <div class="sat-option-desc">Treino compacto que toca em todos os grupos musculares. Perfeito quando a semana foi curta.</div>
+      <div class="sat-option-duration">50 min</div>
+    </div>
+    <div id="reposeOptions" style="display:none;margin-top:4px">
+      <div style="font-family:var(--fd);font-weight:700;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px">Qual dia refazer?</div>
+    </div>
+    <button class="modal-close" onclick="closeSatModal()">Cancelar</button>
+  </div>
+</div>
+
+<!-- INSTALL BANNER -->
+<div id="installBanner">
+  <div style="width:42px;height:42px;border-radius:10px;background:#0a0a0f;border:1px solid #2a2a3a;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Arial Black',sans-serif;font-weight:900;font-size:15px;color:#f0f0f5">F<span style="color:#ff3c5a">G</span></div>
+  <div style="flex:1"><div style="font-weight:700;font-size:12px;color:#f0f0f5">Instalar FORGE</div><div style="font-size:11px;color:#666680;margin-top:1px">Compartilhar → Adicionar à Tela de Início</div></div>
+  <button onclick="document.getElementById('installBanner').style.display='none';localStorage.setItem('forge_install_dismissed','1')" style="background:none;border:none;color:#666680;font-size:22px;cursor:pointer;padding:4px;line-height:1">×</button>
+</div>
+
+<!-- HOME -->
+<div id="home" class="screen active">
+  <div class="home-bg"></div><div class="home-grid"></div>
+  <div class="home-content">
+    <div class="logo">FOR<span>GE</span></div>
+    <div class="logo-sub">Recomp · Condicionamento · Mobilidade</div>
+    <div class="tab-bar">
+      <button class="tab active" onclick="switchTab('treino')">Treinar</button>
+      <button class="tab" onclick="switchTab('historico')">Histórico</button>
+    </div>
+    <div id="tabTreino" class="day-cards"></div>
+    <div id="tabHistorico" style="display:none;width:100%;max-width:440px">
+      <div class="history-list" id="historyList"></div>
+      <button class="btn-pdf" onclick="generateWeeklyPDF()">📄 Exportar Relatório Semanal PDF</button>
+      <button class="btn-clear" onclick="clearHistory()">🗑 Limpar histórico</button>
+    </div>
+  </div>
+</div>
+
+<!-- SESSION -->
+<div id="session" class="screen">
+  <div class="session-header">
+    <button class="btn-back" onclick="goHome()">←</button>
+    <div class="session-header-info">
+      <div class="session-day-label" id="sessionLabel">SEG</div>
+      <div class="session-day-name" id="sessionName">Segunda-feira</div>
+    </div>
+    <div class="elapsed-badge"><div class="elapsed-dot"></div><span id="elapsedTime">00:00</span></div>
+  </div>
+  <div class="session-body" id="sessionBody"></div>
+  <div class="finish-wrap"><button class="btn-finish" id="btnFinish" onclick="finishSession()">Finalizar Treino ✓</button></div>
+</div>
+
+<!-- SUMMARY -->
+<div id="summary" class="screen">
+  <div class="summary-icon">🔥</div>
+  <div class="summary-title">TREINO<br>CONCLUÍDO</div>
+  <div class="summary-sub" id="summarySubtitle"></div>
+  <div class="summary-stats" id="summaryStats"></div>
+  <div class="summary-notes" id="summaryNotes"></div>
+  <div class="summary-btns">
+    <button class="btn-pdf-sum" onclick="generateWeeklyPDF()">📄 Exportar Relatório Semanal</button>
+    <button class="btn-home" onclick="goHome()">← Voltar ao início</button>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+// POSTURE TIPS
+// ═══════════════════════════════════════════════════════════
+const POSTURE = {
+  'Stiff com barra': `🔑 Postura: Pés na largura do quadril. Barra próxima ao corpo na descida — deslize pelas coxas.\n🔒 Segurança: Mantenha a coluna neutra (sem arredondar a lombar). Olhar levemente para frente, não para cima.\n⚠️ Sinal de alerta: Se sentir formigamento na lombar, reduza amplitude ou carga.`,
+  'Leg curl deitado': `🔑 Postura: Quadril levemente pressionado no banco. Pés paralelos, sem girar.\n🔒 Segurança: Excêntrico em 2-3s — não solte. Evite hiperflexão forçada no final.\n⚠️ Sinal de alerta: Câimbra no isquiotibial = desidratação ou excesso de volume.`,
+  'Leg press (pés neutros)': `🔑 Postura: Pés na largura do quadril, posição média da plataforma. Joelhos alinhados com os pés.\n🔒 Segurança: Não trave os joelhos no topo. Pare com 10-15° de flexão restante. Desça controlado.\n💡 Diferença do Lower B: Aqui pés neutros = estímulo balanceado quad+posterior. Na quinta, pés altos = mais glúteo.`,
+  'Cadeira abdutora': `🔑 Postura: Costas apoiadas no encosto. Pés paralelos, sem rotação.\n🔒 Segurança: Pausa no máximo de abertura — não force além do conforto.\n💡 Dica: Ligeira inclinação do tronco para frente ativa mais o glúteo médio.`,
+  'Hip thrust com barra': `🔑 Postura: Escápulas apoiadas na borda do banco. Queixo no peito. Pés alinhados com os joelhos.\n🔒 Segurança: Extensão completa no topo, sem hiperextensão lombar — quadril em linha com o tronco.\n💡 Dica: Empurre o chão com os calcanhares para ativar mais o glúteo.`,
+  'Elevação pélvica unilateral': `🔑 Postura: Pé plantado firme. Joelho da perna de trabalho alinhado com o segundo dedo do pé.\n🔒 Segurança: Se sentir pressão no joelho esquerdo, reduza a amplitude ou pule este exercício.\n⚠️ LCA: Monitore o joelho esquerdo durante todo o movimento.`,
+  'Panturrilha em pé': `🔑 Postura: Pés paralelos ou ligeiramente abertos. Suba na ponta dos pés com controle.\n🔒 Segurança: Amplitude completa — calcanhar abaixo da plataforma, ponta acima. Evite ressaltos.\n💡 Dica: Pausa de 2s no topo aumenta muito a ativação.`,
+  'Supino reto com barra': `🔑 Postura: Pés firmes no chão. Escápulas retraídas e deprimidas. Arco lombar natural (não exagerado).\n🔒 Segurança: Não desce a barra com ricochete no peito. Barra em linha com mamilos.\n💡 Dica: Imagine dobrar a barra no meio — ativa mais o peitoral.`,
+  'Supino inclinado c/ halteres': `🔑 Postura: Banco a 30-45°. Halteres com pegada neutra ou pronada. Cotovelos a ~75°.\n🔒 Segurança: Não trave o cotovelo no topo. Desça até sentir alongamento no peitoral.\n💡 Dica: Descer mais devagar (3s) gera mais hipertrofia.`,
+  'Desenvolvimento militar halt.': `🔑 Postura: Sentado ou em pé. Core firme. Halteres na linha das orelhas antes de empurrar.\n🔒 Segurança: Não arqueie a lombar. Se em pé, joelhos levemente flexionados.\n⚠️ Sinal de alerta: Dor no ombro = reduza a carga e verifique a trajetória.`,
+  'Elevação lateral': `🔑 Postura: Cotovelo ligeiramente flexionado. Suba até a linha do ombro (90°), não além.\n🔒 Segurança: Carga leve. Polegar levemente abaixado no topo (como derramar água).\n💡 Dica: Parcial nos últimos 30° aumenta o tempo sob tensão.`,
+  'Tríceps corda (polia)': `🔑 Postura: Cotovelos fixos ao lado do corpo — esse é o segredo. Tronco levemente inclinado.\n🔒 Segurança: Extensão completa sem travar. Não use o corpo para empurrar a carga.\n💡 Dica: Abra as pontas da corda no final para ativação extra.`,
+  'Tríceps francês c/ haltere': `🔑 Postura: Cotovelos apontados para cima e para dentro — não deixe abrir.\n🔒 Segurança: Movimente apenas os antebraços. Se sentir pressão no cotovelo, reduza amplitude.\n💡 Dica: Excêntrico lento (3s) maximiza o alongamento do tríceps.`,
+  'Flexão de braço [CIRC]': `🔑 Postura: Mãos ligeiramente mais largas que os ombros. Corpo em linha reta do calcanhar à cabeça.\n🔒 Segurança: Não deixe o quadril cair ou subir. Ative o core durante todo o movimento.\n💡 Variações: Mãos mais largas = mais peitoral. Mais fechadas = mais tríceps.`,
+  'Remada halt. bilateral curvado [CIRC]': `🔑 Postura: Tronco a ~45°. Coluna neutra. Puxe os cotovelos para trás e para cima.\n🔒 Segurança: Não arredonde a lombar. Core firme. Não balanço o tronco.\n💡 Dica: Imagine "guardar os cotovelos nos bolsos traseiros".`,
+  'TRX Row (remada em suspensão) [CIRC]': `🔑 Postura: Corpo inclinado — quanto mais horizontal, mais difícil. Puxe o peito até as alças.\n🔒 Segurança: Mantenha o corpo em prancha — não deixe o quadril afundar.\n💡 Dica: Pausa de 1s no topo com escápulas retraídas maximiza ativação das costas.`,
+  'Agachamento c/ halter (goblet) [CIRC]': `🔑 Postura: Halter no peito com ambas as mãos. Pés um pouco mais que largura dos ombros, pés levemente abertos.\n🔒 Segurança: Joelhos acompanham a direção dos pés. Calcanhares no chão. Para no joelho esq. se doer.\n⚠️ LCA: Sem profundidade excessiva. Confortável = correto.`,
+  'Press de ombro halt. em pé [CIRC]': `🔑 Postura: Halteres na linha das orelhas. Core ativado. Empurre verticalmente sem arcar a lombar.\n🔒 Segurança: Respiração: inspire antes, expire ao empurrar. Não trave os cotovelos no topo.\n💡 Dica: Em pé ativa mais o core. Sentado isola mais o deltóide.`,
+  'Plank c/ toque no ombro [CIRC]': `🔑 Postura: Quadril estável — sem rotação. Pés mais abertos ajudam a estabilizar.\n🔒 Segurança: Toque suave no ombro — não force a rotação do tronco.\n💡 Dica: Respiração constante. Não prenda o ar.`,
+  'Leg press 45° (pés altos)': `🔑 Postura: Pés altos e afastados — desvia carga do joelho para o glúteo/isquitibial.\n🔒 Segurança: Joelhos NÃO travam no topo. Para com 10-15° de flexão restante.\n⚠️ LCA: Não deixe os joelhos colapsarem para dentro. Carga que permita controle total.`,
+  'Agachamento goblet c/ halt.': `🔑 Postura: Halter no peito. Pés levemente abertos. Desça mantendo o tronco ereto.\n🔒 Segurança: PARE se sentir qualquer dor no joelho esquerdo. Profundidade = conforto.\n⚠️ LCA: Prefira amplitude reduzida com técnica perfeita a profundidade com dor.`,
+  'Cadeira extensora (0–60°)': `🔑 Postura: Costas no encosto. Ângulo 0° = perna estendida. Não passe de 60° de flexão.\n🔒 Segurança: O arco parcial (0-60°) foi escolhido especificamente por ser mais seguro para ligamentos cruzados.\n⚠️ LCA: Nunca force além do ponto de desconforto. Reduza carga se sentir pressão.`,
+  'Avanço estático (split squat)': `🔑 Postura: Pé da frente firme. Joelho traseiro desce quase ao chão. Tronco ligeiramente inclinado.\n🔒 Segurança: Joelho da frente alinhado com o segundo dedo. Não ultrapasse o pé.\n⚠️ LCA: Se o joelho esquerdo estiver na frente, monitore. Mude de lado se necessário.`,
+  'Abdução de quadril c/ elástico': `🔑 Postura: Em pé ou deitado. Elástico acima dos joelhos. Movimento controlado.\n🔒 Segurança: Não bata as pernas ao voltar — excêntrico controlado.\n💡 Função: Fortalece glúteo médio = estabilizador primário do joelho. Essencial pro LCA.`,
+  'Agach. búlgaro c/ halt. leve': `🔑 Postura: Pé traseiro no banco. Tronco ereto ou ligeiramente inclinado. Desça controlado.\n🔒 Segurança: PULE se sentir qualquer desconforto no joelho esquerdo. Halteres muito leves.\n⚠️ LCA: Este é o exercício mais exigente do dia. Autoavalie antes de incluir.`,
+  'Puxada na máquina (pronada)': `🔑 Postura: Segure com poucos cm além da largura dos ombros. Puxe até o queixo/clavícula.\n🔒 Segurança: Retraia as escápulas antes de puxar — não só os braços. Controle a subida.\n💡 Progressão: Aumente carga quando conseguir 10 reps com técnica perfeita.`,
+  'Progressão barra fixa — Dead hang': `🔑 Postura: Pegada pronada (palmas para fora), um pouco além da largura dos ombros.\n🔒 Objetivo: Desenvolvimento de grip, força escapular e familiarização com o movimento.\n📈 Progressão: Semana 1-2: 20s × 3. Semana 3-4: 25s × 3. Semana 5-6: 30s × 3. Continue até 45s.`,
+  'Progressão barra fixa — Scapular pull': `🔑 Postura: Pendurado, SEM dobrar o cotovelo. Apenas retraia e abaixe as escápulas.\n🔒 Objetivo: Ativa o serrátil anterior e romboides — músculos base do pull-up.\n📈 Progressão: Quando conseguir 3×12 com controle, inicie negativas (descer devagar da barra).`,
+  'Remada curvada com barra': `🔑 Postura: Tronco a 45°. Puxe a barra até o umbigo. Cotovelos próximos ao corpo.\n🔒 Segurança: Coluna neutra — não arredonde. Joelhos levemente flexionados.\n💡 Dica: Segurar a barra por 1s no topo com escápulas retraídas aumenta ativação.`,
+  'Puxada supinada (máquina)': `🔑 Postura: Pegada supinada (palmas para você), um pouco mais fechada. Puxe até o queixo.\n🔒 Segurança: Amplitude completa — deixe os braços estenderem no topo para alongar o latíssimo.\n💡 Dica: Imagine puxar os cotovelos para os bolsos — foca no latíssimo.`,
+  'Leg press (pés neutros)': `🔑 Postura: Pés na largura do quadril, altura média da plataforma. Costas apoiadas no banco.\n🔒 Segurança: Não trave os joelhos no topo — pare com 10-15° restantes. Joelhos acompanham a direção dos pés.\n⚠️ LCA: Carga que permita controle total. Se sentir pressão no joelho esq., reduza amplitude.`,
+  'Rosca direta com barra': `🔑 Postura: Cotovelos fixos ao lado do corpo. Supinação completa no topo.\n🔒 Segurança: Sem balanço de tronco — se precisar balançar, a carga está alta demais.\n💡 Dica: EZ-bar reduz estresse no pulso se sentir desconforto.`,
+  'Rosca martelo': `🔑 Postura: Pegada neutra (polegar para cima). Cotovelos fixos. Puxe até o ombro.\n🔒 Segurança: Excêntrico em 3s — o que mais estimula o crescimento do bíceps.\n💡 Dica: Alterna com rosca alternada para maior foco na cabeça longa.`,
+  'Core: Hollow body hold': `🔑 Postura: Costas COMPLETAMENTE no chão. Braços estendidos, pernas retas baixas.\n🔒 Segurança: Se a lombar levantar, suba as pernas. A lombar no chão é o único critério.\n💡 Progressão: Joelhos dobrados (fácil) → joelhos retos → braços atrás da cabeça (difícil).`,
+  'Core: Dead bug': `🔑 Postura: Lombar no chão o tempo todo. Braço e perna opostos se estendem lentamente.\n🔒 Segurança: Movimento LENTO (4s cada extensão). Respiração: expire ao estender.\n💡 Função: Estabilidade anti-extensão — essencial para saúde lombar e performance.`,
+  'Core: Pallof press': `🔑 Postura: De lado para a polia/elástico. Segurar no peito, empurrar à frente, voltar.\n🔒 Segurança: Não gire o tronco — o objetivo é RESISTIR à rotação. Core firme.\n💡 Função: Anti-rotação — protege a coluna e melhora transferência de força em todos os movimentos.`,
+  // Saturday
+  'Mobilidade de quadril (90/90)': `🔑 Postura: Sente no chão, uma perna na frente a 90°, outra atrás a 90°. Tronco ereto.\n💡 Dica: Alterne entre os lados. Não force além do conforto. Respire profundamente.`,
+  'Alongamento de isquiotibial': `🔑 Postura: Perna estendida no chão ou elevada. Incline o tronco mantendo a coluna reta.\n🔒 Segurança: Sensação de "puxão" é normal. Dor aguda, não. Mantenha respiração suave.`,
+  'Foam roller completo': `🔑 Postura: Role lentamente. Pause 20-30s nos pontos de tensão.\n💡 Sequência: Panturrilhas → isquiotibiais → glúteos → TFL → costas torácica.`,
+  'Cat-cow dinâmico': `🔑 Postura: Quatro apoios. Cat: arredonde toda a coluna. Cow: abra o peito, olhe levemente para cima.\n💡 Dica: Sincronize com a respiração. Inspire no Cow, expire no Cat.`,
+  'Rotação torácica': `🔑 Postura: Deitado de lado, joelhos dobrados a 90°. Gire apenas a parte superior do tronco.\n🔒 Segurança: O quadril fica no chão. A rotação é torácica, não lombar.`,
+  'Hip thrust sem carga': `🔑 Postura: Costas no banco, pés firmes. Extensão completa sem hiperextender a lombar.\n💡 Dica: Use para ativar e sentir a conexão mente-músculo com o glúteo.`,
+  'Press de ombros halt. (leve)': `🔑 Postura: Carga bem leve — foco em mobilidade e ativação, não em força.\n💡 Dica: Amplitude completa. Sinta cada grau do movimento.`,
+  'Agachamento goblet leve': `🔑 Postura: Foco em profundidade e controle, não em carga.\n⚠️ LCA: Ótima oportunidade para trabalhar a mobilidade do joelho sem estresse.`,
+  'Bíceps + Tríceps alternado': `🔑 Postura: Movimentos lentos e controlados. Carga leve — não é um treino de força.\n💡 Dica: 3s para subir, 3s para descer. Sinta o músculo em cada fase.`,
+  'Supino halt. leve': `🔑 Postura: Foco em amplitude — desça além do normal, sinta o peitoral alongar.\n💡 Dica: Carga leve permite mais amplitude e melhor mobilidade do ombro.`,
+  'Remada unilateral leve': `🔑 Postura: Apoie uma mão no banco. Puxe o cotovelo para trás e para cima.\n💡 Dica: Carga leve com foco na contração e retração da escápula.`,
+  'Leg press leve': `🔑 Postura: Carga que permita 15-20 reps confortáveis. Foco em ativação e mobilidade.\n⚠️ LCA: Boa sessão para avaliar como o joelho está respondendo ao programa.`,
+};
+
+// ═══════════════════════════════════════════════════════════
+// HIIT PRESETS
+// ═══════════════════════════════════════════════════════════
+const HIIT_PRESETS = [
+  {
+    name:'Tabata Clássico',
+    desc:'8 rounds · 20s trabalho / 10s descanso · 4 min total',
+    work:20,rest:10,rounds:8,color:'#ff3c5a',
+    tip:'Intensidade máxima (95-100% FC). Ideal para condicionamento metabólico. Use bike ou elíptico.',
+  },
+  {
+    name:'HIIT Moderado',
+    desc:'6 rounds · 40s trabalho / 20s descanso · 6 min total',
+    work:40,rest:20,rounds:6,color:'#ff7c3a',
+    tip:'Intensidade 80-85% FC. Boa queima de gordura mantendo potência. Versátil para qualquer equipamento.',
+  },
+  {
+    name:'Intervalado Longo',
+    desc:'5 rounds · 60s trabalho / 30s descanso · 7.5 min total',
+    work:60,rest:30,rounds:5,color:'#3a7cff',
+    tip:'Intensidade 75-80% FC. Melhora capacidade aeróbica e resistência. Menos impacto articular.',
+  },
+];
+
+// ═══════════════════════════════════════════════════════════
+// DAYS DATA
+// ═══════════════════════════════════════════════════════════
+const DAYS = [
+  {
+    id:'seg',label:'SEG',name:'Segunda-feira',
+    focus:'Lower A — Posterior + Quadríceps',color:'#0F3460',
+    warmup:[
+      {text:'Hip 90/90 stretch',duration:'2×60s cada lado',timer:120},
+      {text:'Frog stretch',duration:'2×45s',timer:90},
+      {text:'Glute bridge com pausa',duration:'2×15 reps',timer:0},
+    ],
+    exercises:[
+      {name:'Stiff com barra',sets:4,reps:'8–10',obs:'Foco no alongamento isquiotibial. Controle a descida.'},
+      {name:'Leg curl deitado',sets:4,reps:'10–12',obs:'Excêntrico lento (2-3s). Não solte rápido.'},
+      {name:'Hip thrust com barra',sets:4,reps:'10–12',obs:'Extensão completa no topo. Queixo no peito.'},
+      {name:'Leg press (pés neutros)',sets:4,reps:'10–12',obs:'Pés na largura do quadril, altura média. Joelhos não travam no topo. Complementa o stiff com estímulo de quad.'},
+      {name:'Panturrilha em pé',sets:4,reps:'15–20',obs:'Pausa no topo. Amplitude completa.'},
+      {name:'Agachamento goblet leve',sets:3,reps:'12',obs:'Opcional — só se o joelho estiver bem. Profundidade confortável.'},
+    ],
+    cardio:{desc:'Bike ergométrica — Zona 2',duration:20,tip:'Zona 2 = conversação confortável. FC: ~60-70% do máximo. Mantém gordura como combustível.'},lcaWarning:false,
+  },
+  {
+    id:'ter',label:'TER',name:'Terça-feira',
+    focus:'Upper A — Empurra',color:'#E94560',
+    warmup:[
+      {text:'Rotação torácica em 4 apoios',duration:'2×10 cada lado',timer:0},
+      {text:'Dislocate com elástico',duration:'2×15 reps',timer:0},
+      {text:'Band pull-apart',duration:'2×20 reps',timer:0},
+    ],
+    exercises:[
+      {name:'Supino reto com barra',sets:4,reps:'6–8',obs:'Força base. Progressão semanal — tente +2,5kg.'},
+      {name:'Supino inclinado c/ halteres',sets:3,reps:'10–12',obs:'Amplitude controlada. Não tranque o cotovelo.'},
+      {name:'Desenvolvimento militar halt.',sets:4,reps:'8–10',obs:'Sem hiperextensão lombar. Core ativado.'},
+      {name:'Elevação lateral',sets:3,reps:'15',obs:'Parcial no topo. Cotovelo ligeiramente flexionado.'},
+      {name:'Tríceps corda (polia)',sets:3,reps:'12–15',obs:'Cotovelos fixos ao lado do corpo.'},
+      {name:'Tríceps francês c/ haltere',sets:3,reps:'10–12',obs:'Amplitude total. Excêntrico controlado.'},
+    ],
+    cardio:{desc:'Esteira inclinada 5–7% — caminhada rápida',duration:15,tip:'Inclinação eleva FC sem impacto no joelho. Velocidade que permita conversar com algum esforço.'},lcaWarning:false,
+  },
+  {
+    id:'qua',label:'QUA',name:'Quarta-feira',
+    focus:'Condicionamento + Mobilidade — Circuito Compacto',color:'#1a6b5a',
+    warmup:[
+      {text:"World's greatest stretch",duration:'3×5 cada lado',timer:0},
+      {text:'Pigeon pose',duration:'2×60s cada lado',timer:120},
+      {text:'Foam roller coluna torácica',duration:'3 minutos',timer:180},
+      {text:'Abertura de quadril c/ rotação',duration:'2×10 cada',timer:0},
+    ],
+    exercises:[
+      {name:'Flexão de braço [CIRC]',sets:4,reps:'15–20',obs:'Tudo num mesmo spot. Sem descanso entre exercícios do round.'},
+      {name:'Remada halt. bilateral curvado [CIRC]',sets:4,reps:'15',obs:'Dois halteres, tronco 45°. Compacto, sem monopolizar máquina.'},
+      {name:'TRX Row (remada em suspensão) [CIRC]',sets:4,reps:'15',obs:'Corpo inclinado. Puxe o peito até as alças.'},
+      {name:'Agachamento c/ halter (goblet) [CIRC]',sets:4,reps:'15',obs:'Halter no peito. Profundidade confortável, sem dor.'},
+      {name:'Press de ombro halt. em pé [CIRC]',sets:4,reps:'12',obs:'Core ativado. 90s de descanso após completar o round.'},
+      {name:'Plank c/ toque no ombro [CIRC]',sets:4,reps:'20 toques',obs:'Quadril estável, sem rotação. Finaliza o round.'},
+    ],
+    cardio:{desc:'Bike ou Elíptico — Zona 2',duration:20,tip:'Após o circuito intenso, Zona 2 ajuda a remover lactato e acelera a recuperação. Não force.'},lcaWarning:false,
+  },
+  {
+    id:'qui',label:'QUI',name:'Quinta-feira',
+    focus:'Lower B — Quadríceps + VMO',color:'#533483',
+    warmup:[
+      {text:'TKE com elástico (ativa VMO)',duration:'3×20 reps',timer:0},
+      {text:'Wall sit isométrico',duration:'2×30s',timer:30},
+      {text:'Mobilidade de tornozelo',duration:'2×10 cada',timer:0},
+    ],
+    exercises:[
+      {name:'Leg press 45° (pés altos)',sets:4,reps:'10–12',obs:'Carga moderada. Joelho não ultrapassa a ponta do pé.'},
+      {name:'Agachamento goblet c/ halt.',sets:3,reps:'12',obs:'Profundidade confortável. Pare se sentir dor.'},
+      {name:'Cadeira extensora (0–60°)',sets:4,reps:'15',obs:'Arco PARCIAL — seguro pro LCA. Não vá além de 60°.'},
+      {name:'Avanço estático (split squat)',sets:3,reps:'10 cad',obs:'Joelho traseiro ao chão. Sem carga excessiva.'},
+      {name:'Abdução de quadril c/ elástico',sets:3,reps:'15 cad',obs:'Estabiliza o joelho. Glúteo médio forte = joelho saudável.'},
+      {name:'Agach. búlgaro c/ halt. leve',sets:3,reps:'10 cad',obs:'⚠️ APENAS se sem dor. Halteres leves. Pule se necessário.'},
+    ],
+    cardio:{desc:'Bike — Zona 3 · intensidade moderada-alta',duration:20,tip:'Zona 3 = esforço considerável, fala em frases curtas. FC ~75-80% máximo. Ótimo para condicionamento.'},lcaWarning:true,
+  },
+  {
+    id:'sex',label:'SEX',name:'Sexta-feira',
+    focus:'Upper B — Puxa + Core',color:'#0D7C66',
+    warmup:[
+      {text:'Cat-cow',duration:'2×10 reps',timer:0},
+      {text:'Overhead reach lateral',duration:'2×10 cada',timer:0},
+      {text:'Rotação escapular',duration:'2×15 reps',timer:0},
+    ],
+    exercises:[
+      {name:'Puxada na máquina (pronada)',sets:4,reps:'8–10',obs:'Substitui barra fixa. Amplitude completa — escápulas retraídas.'},
+      {name:'Progressão barra fixa — Dead hang',sets:3,reps:'20–30s',obs:'Segure na barra. Desenvolve grip e escápula. +5s por semana.'},
+      {name:'Progressão barra fixa — Scapular pull',sets:3,reps:'8–10',obs:'Pendurado, apenas retraia as escápulas. Base do pull-up.'},
+      {name:'Remada curvada com barra',sets:4,reps:'8–10',obs:'Core firme. Cotovelo perto do corpo.'},
+      {name:'Puxada supinada (máquina)',sets:3,reps:'10–12',obs:'Integra bíceps. Amplitude completa.'},
+      {name:'Rosca direta com barra',sets:3,reps:'10–12',obs:'Sem balanço do tronco.'},
+      {name:'Rosca martelo',sets:3,reps:'12',obs:'Excêntrico 3s.'},
+      {name:'Core: Hollow body hold',sets:3,reps:'30–45s',obs:'Lombar pressionada no chão.'},
+      {name:'Core: Dead bug',sets:3,reps:'10 cad',obs:'Lento. Lombar no chão o tempo todo.'},
+      {name:'Core: Pallof press',sets:3,reps:'12 cad',obs:'Anti-rotação. Core firme.'},
+    ],
+    cardio:{desc:'Esteira inclinada ou Elíptico',duration:15,tip:'Final de semana de treino — Zona 2-3 leve. Recuperação ativa para chegar bem na segunda.'},lcaWarning:false,
+  },
+];
+
+// Saturday special days
+const SAT_DAYS = {
+  recovery: {
+    id:'sat_recovery',label:'SAB',name:'Sábado',
+    focus:'Recuperação Ativa + Mobilidade',color:'#2ecc7a',
+    warmup:[],
+    exercises:[
+      {name:'Mobilidade de quadril (90/90)',sets:3,reps:'60s cad lado',obs:'Respiração lenta. Sem forçar. Transição suave entre os lados.'},
+      {name:'Foam roller completo',sets:1,reps:'8–10 min',obs:'Role lentamente. Pause nos pontos de tensão.'},
+      {name:'Alongamento de isquiotibial',sets:3,reps:'45s cad lado',obs:'Coluna reta na descida. Sensação de puxão, não dor.'},
+      {name:'Cat-cow dinâmico',sets:3,reps:'10 reps',obs:'Sincronize com a respiração. Slow e controlado.'},
+      {name:'Rotação torácica',sets:3,reps:'10 cad lado',obs:'Deitado de lado. Quadril fixo. Apenas a parte superior gira.'},
+      {name:'Hip thrust sem carga',sets:2,reps:'15',obs:'Ativação glútea suave. Sem carga — foco na contração.'},
+    ],
+    cardio:{desc:'Caminhada ou Bike — Zona 1 suave',duration:30,tip:'Zona 1 = passeio. FC ~50-60% máximo. Estimula circulação e recuperação sem estresse. Aproveite.'},lcaWarning:false,
+  },
+  fullbody: {
+    id:'sat_fullbody',label:'SAB',name:'Sábado',
+    focus:'Full Body Expresso',color:'#ff7c3a',
+    warmup:[
+      {text:'Mobilidade geral (articular)',duration:'5 minutos',timer:0},
+      {text:'Agachamento livre (sem carga)',duration:'2×10 reps',timer:0},
+    ],
+    exercises:[
+      {name:'Leg press leve',sets:3,reps:'12–15',obs:'Carga moderada. Aquece as pernas sem sobrecarregar.'},
+      {name:'Supino halt. leve',sets:3,reps:'12–15',obs:'Carga leve. Foco em amplitude e ativação.'},
+      {name:'Remada unilateral leve',sets:3,reps:'12 cad',obs:'Carga leve. Contração e retração escapular.'},
+      {name:'Press de ombros halt. (leve)',sets:3,reps:'12–15',obs:'Carga leve. Ombros aquecidos do início da semana.'},
+      {name:'Agachamento goblet leve',sets:3,reps:'15',obs:'Goblet com halter médio. Profundidade confortável.'},
+      {name:'Bíceps + Tríceps alternado',sets:3,reps:'12 cad',obs:'Superset leve. Movimento lento e controlado.'},
+    ],
+    cardio:{desc:'Bike ou Elíptico — Zona 2-3',duration:20,tip:'Termina bem a semana. Moderado, não máximo. Você merece um domingo de descanso.'},lcaWarning:false,
+  },
+};
+
+// ═══════════════════════════════════════════════════════════
+// STORAGE
+// ═══════════════════════════════════════════════════════════
+function loadHistory(){try{return JSON.parse(localStorage.getItem('forge_history')||'[]')}catch(e){return[]}}
+function saveHistory(h){localStorage.setItem('forge_history',JSON.stringify(h))}
+function addSession(e){const h=loadHistory();h.unshift(e);if(h.length>60)h.pop();saveHistory(h)}
+
+// ═══════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════
+let currentDay=null,sessionStartTime=null,elapsedInterval=null;
+let cardioInterval=null,cardioElapsed=0,cardioRunning=false;
+let warmupTimers={},restTimers={},restRemaining={};
+let hiitConfig=null,hiitInterval=null,hiitCurrentRound=0,hiitPhase='work',hiitPhaseElapsed=0,hiitRunning=false;
+let cardioMode='steady'; // 'steady' or 'hiit'
+
+// ═══════════════════════════════════════════════════════════
+// HOME
+// ═══════════════════════════════════════════════════════════
+function switchTab(tab){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab')[tab==='treino'?0:1].classList.add('active');
+  document.getElementById('tabTreino').style.display=tab==='treino'?'grid':'none';
+  document.getElementById('tabHistorico').style.display=tab==='historico'?'block':'none';
+  if(tab==='historico')renderHistory();
+}
+
+function renderHome(){
+  const c=document.getElementById('tabTreino');
+  c.innerHTML='';
+  const h=loadHistory();
+  DAYS.forEach(day=>{
+    const count=h.filter(s=>s.dayId===day.id).length;
+    const card=document.createElement('div');
+    card.className='day-card';
+    card.style.setProperty('--card-color',day.color);
+    card.innerHTML=`
+      <div class="day-card-label">${day.label}</div>
+      <div class="day-card-name">${day.name.split('-')[0]}</div>
+      <div class="day-card-focus">${day.focus}</div>
+      ${count>0?`<div class="day-card-badge">${count}×</div>`:''}
+    `;
+    card.onclick=()=>startSession(day);
+    c.appendChild(card);
+  });
+  // Saturday card
+  const satCount=h.filter(s=>s.dayId&&s.dayId.startsWith('sat')).length;
+  const satCard=document.createElement('div');
+  satCard.className='day-card day-card-sat';
+  satCard.style.setProperty('--card-color','#b8860b');
+  satCard.innerHTML=`
+    <div class="day-card-label">SAB</div>
+    <div class="day-card-name">Sábado</div>
+    <div class="day-card-focus">Recuperação · Reposição · Full Body</div>
+    ${satCount>0?`<div class="day-card-badge">${satCount}×</div>`:''}
+  `;
+  satCard.onclick=openSatModal;
+  c.appendChild(satCard);
+}
+
+function renderHistory(){
+  const h=loadHistory();
+  const list=document.getElementById('historyList');
+  if(!h.length){list.innerHTML='<div class="history-empty">Nenhum treino registrado ainda.</div>';return;}
+  list.innerHTML='';
+  h.forEach(entry=>{
+    const allDays=[...DAYS,SAT_DAYS.recovery,SAT_DAYS.fullbody];
+    const day=allDays.find(d=>d.id===entry.dayId)||{};
+    const div=document.createElement('div');
+    div.className='history-item';
+    div.style.setProperty('--card-color',day.color||entry.dayColor||'var(--accent)');
+    const note=entry.sessionNotes?(entry.sessionNotes.slice(0,100)+(entry.sessionNotes.length>100?'...':'')):'';
+    div.innerHTML=`
+      <div class="history-item-header">
+        <div><div class="history-day">${entry.dayName}</div><div style="font-size:10px;color:var(--muted);margin-top:1px">${entry.dayFocus||''}</div></div>
+        <div class="history-date">${entry.date}<br><span style="color:var(--text);font-weight:600">${entry.dateTime}</span></div>
+      </div>
+      <div class="history-stats">
+        <div class="hstat">⏱ <span>${entry.duration}</span></div>
+        <div class="hstat">✓ <span>${entry.completedSets}/${entry.totalSets}</span> séries</div>
+        <div class="hstat">🚴 <span>${entry.cardioTime}</span></div>
+        <div class="hstat">📊 <span>${entry.completion}%</span></div>
+      </div>
+      ${note?`<div class="history-note">"${note}"</div>`:''}
+    `;
+    list.appendChild(div);
+  });
+}
+
+function clearHistory(){
+  if(confirm('Limpar todo o histórico?')){localStorage.removeItem('forge_history');renderHistory();renderHome();}
+}
+
+// ═══════════════════════════════════════════════════════════
+// SATURDAY
+// ═══════════════════════════════════════════════════════════
+function openSatModal(){
+  const ro=document.getElementById('reposeOptions');
+  ro.style.display='none';ro.innerHTML='<div style="font-family:var(--fd);font-weight:700;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px">Qual dia refazer?</div>';
+  document.getElementById('satModal').classList.add('open');
+}
+function closeSatModal(){document.getElementById('satModal').classList.remove('open')}
+function showReposeOptions(){
+  const ro=document.getElementById('reposeOptions');
+  ro.style.display='block';
+  DAYS.forEach(day=>{
+    const btn=document.createElement('div');
+    btn.className='sat-option';btn.style.setProperty('--card-color',day.color);
+    btn.innerHTML=`<div class="sat-option-title">${day.label} — ${day.name}</div><div class="sat-option-desc">${day.focus}</div>`;
+    btn.onclick=()=>{closeSatModal();startSession(day)};
+    ro.appendChild(btn);
+  });
+}
+function startSatSession(type){
+  closeSatModal();
+  startSession(SAT_DAYS[type]);
+}
+
+// ═══════════════════════════════════════════════════════════
+// SESSION
+// ═══════════════════════════════════════════════════════════
+function startSession(day){
+  currentDay=day;sessionStartTime=Date.now();
+  cardioElapsed=0;cardioRunning=false;cardioMode='steady';
+  warmupTimers={};restTimers={};restRemaining={};
+  hiitConfig=null;hiitRunning=false;
+  document.getElementById('sessionLabel').textContent=day.label;
+  document.getElementById('sessionName').textContent=day.name;
+  document.documentElement.style.setProperty('--session-color',day.color);
+  document.getElementById('btnFinish').style.boxShadow=`0 4px 20px ${day.color}66`;
+  clearInterval(elapsedInterval);
+  elapsedInterval=setInterval(()=>{
+    document.getElementById('elapsedTime').textContent=fmtTime(Math.floor((Date.now()-sessionStartTime)/1000),true);
+  },1000);
+  renderSession(day);
+  showScreen('session');
+  window.scrollTo(0,0);
+}
+
+function renderSession(day){
+  const body=document.getElementById('sessionBody');body.innerHTML='';
+  if(day.lcaWarning){
+    const w=document.createElement('div');
+    w.innerHTML=`<div class="lca-tag">⚠️ DIA SENSÍVEL — Desgaste LCA joelho esq. · Carga moderada · Pare se sentir dor</div>`;
+    body.appendChild(w);
+  }
+  // Warmup
+  if(day.warmup.length){
+    const wb=createPhase('⚡','Aquecimento & Mobilidade',true);
+    const wc=wb.querySelector('.phase-content');
+    day.warmup.forEach((item,i)=>{
+      const row=document.createElement('div');row.className='warmup-item';
+      row.innerHTML=`
+        <div class="warmup-check" id="wc${i}" onclick="toggleWarmup(${i})"></div>
+        <div class="warmup-text"><b>${item.text}</b><br><span style="color:var(--muted);font-size:10px">${item.duration}</span></div>
+        ${item.timer>0?`<button class="warmup-timer-btn" id="wt${i}" onclick="startWarmupTimer(${i},${item.timer})">▶ ${item.timer}s</button>`:''}
+      `;
+      wc.appendChild(row);
+    });
+    body.appendChild(wb);
+  }
+  // Exercises
+  const eb=createPhase('🏋️','Exercícios',true);
+  const ec=eb.querySelector('.phase-content');
+  day.exercises.forEach((ex,ei)=>{
+    let setsHTML='';
+    for(let s=1;s<=ex.sets;s++){
+      setsHTML+=`<div class="set-row">
+        <div class="set-label">S${s}</div>
+        <input class="set-input" placeholder="kg" id="load_${ei}_${s}" type="number" inputmode="decimal" step="0.5">
+        <input class="set-input" placeholder="reps" id="reps_${ei}_${s}" type="number" inputmode="numeric">
+        <button class="set-done-btn" id="sd_${ei}_${s}" onclick="toggleSetDone(${ei},${s},${ex.sets})">✓</button>
+      </div>`;
+    }
+    const posture=POSTURE[ex.name];
+    const card=document.createElement('div');card.className='exercise-card';card.id=`ec${ei}`;
+    card.innerHTML=`
+      <div class="exercise-card-header" onclick="toggleEx(${ei})">
+        <div class="ex-number" id="en${ei}">${ei+1}</div>
+        <div class="ex-name">${ex.name}</div>
+        <div class="ex-sets-reps">${ex.sets}×${ex.reps}</div>
+      </div>
+      <div class="exercise-card-body">
+        <div class="ex-obs">${ex.obs}</div>
+        ${posture?`
+        <div class="posture-tip" id="pt${ei}" onclick="togglePosture(${ei})">
+          <div class="posture-tip-header">📐 Postura & Segurança <span class="posture-tip-chevron">▾</span></div>
+          <div class="posture-tip-body">${posture.replace(/\n/g,'<br>')}</div>
+        </div>`:''}
+        <div class="sets-grid">${setsHTML}</div>
+        <div class="rest-timer-wrap">
+          <div class="rest-display" id="rd${ei}">1:30</div>
+          <div class="rest-controls">
+            <button class="rest-btn" onclick="startRest(${ei},60)">60s</button>
+            <button class="rest-btn" onclick="startRest(${ei},90)">90s</button>
+            <button class="rest-btn" onclick="startRest(${ei},120)">2min</button>
+            <button class="rest-btn primary" id="rb${ei}" onclick="toggleRest(${ei})">▶ Iniciar</button>
+          </div>
+        </div>
+        <div class="notes-section">
+          <span class="notes-label">Anotações</span>
+          <textarea class="notes-textarea" id="en_${ei}" placeholder="Carga, sensações, ajustes..."></textarea>
+        </div>
+      </div>
+    `;
+    ec.appendChild(card);
+  });
+  body.appendChild(eb);
+  // Cardio
+  const cb=createPhase('🚴','Cardio Final',false);
+  cb.querySelector('.phase-content').innerHTML=buildCardioHTML(day.cardio);
+  body.appendChild(cb);
+  // Session notes
+  const nb=document.createElement('div');
+  nb.innerHTML=`<div class="phase-block open"><div class="phase-header"><div class="phase-icon">📝</div><div class="phase-title">Notas Gerais</div></div><div class="phase-content" style="display:block"><textarea class="notes-textarea" id="sessionNotes" style="min-height:70px" placeholder="Como foi? Energia, dores, destaques..."></textarea></div></div>`;
+  body.appendChild(nb);
+}
+
+function buildCardioHTML(cardio){
+  const presetsHTML=HIIT_PRESETS.map((p,i)=>`
+    <div class="hiit-preset" id="hpreset${i}" onclick="selectHiitPreset(${i})">
+      <div>
+        <div class="hiit-preset-name">${p.name}</div>
+        <div class="hiit-preset-info">${p.desc}</div>
+      </div>
+    </div>
+  `).join('');
+  return `
+    <div class="cardio-wrap">
+      <div class="cardio-mode-bar">
+        <button class="cardio-mode-btn active" id="modeStready" onclick="setCardioMode('steady')">🚴 Contínuo</button>
+        <button class="cardio-mode-btn" id="modeHiit" onclick="setCardioMode('hiit')">⚡ HIIT</button>
+      </div>
+      <!-- STEADY -->
+      <div class="cardio-panel active" id="panelSteady">
+        <div class="cardio-desc">${cardio.desc} · ${cardio.duration} min programados</div>
+        <div class="cardio-tip">💡 ${cardio.tip}</div>
+        <div class="cardio-display" id="cardioDisplay">00:00</div>
+        <div class="cardio-controls">
+          <button class="cardio-btn start" id="cbs" onclick="toggleCardio()">▶ Iniciar</button>
+          <button class="cardio-btn reset" onclick="resetCardio()">↺ Zerar</button>
+        </div>
+        <textarea class="notes-textarea" id="cardioNote" placeholder="FC, ritmo, como se sentiu..." style="margin-top:8px"></textarea>
+      </div>
+      <!-- HIIT -->
+      <div class="cardio-panel" id="panelHiit">
+        <div id="hiitActiveDisplay" style="display:none">
+          <div class="hiit-phase-display">
+            <div class="hiit-phase-label" id="hiitPhaseLabel" style="color:var(--green)">PREPARE</div>
+            <div class="hiit-round-label" id="hiitRoundLabel">Round 0/0</div>
+          </div>
+          <div class="cardio-display" id="hiitDisplay">00</div>
+          <div class="hiit-progress"><div class="hiit-progress-fill" id="hiitProgressFill" style="background:var(--green);width:100%"></div></div>
+          <div class="cardio-controls">
+            <button class="cardio-btn start" id="hiitStartBtn" onclick="toggleHiit()">▶ Iniciar</button>
+            <button class="cardio-btn reset" onclick="resetHiit()">↺ Reiniciar</button>
+          </div>
+        </div>
+        <div id="hiitSetup">
+          <div style="font-size:11px;color:var(--muted);margin-bottom:10px;line-height:1.4">Escolha um preset ou crie seu próprio ciclo:</div>
+          <div class="hiit-presets">${presetsHTML}</div>
+          <div class="hiit-custom">
+            <div class="hiit-custom-title">⚙️ Personalizado</div>
+            <div class="hiit-custom-row">
+              <div class="hiit-input-group"><div class="hiit-input-label">Trabalho (s)</div><input class="hiit-input" id="hiitWork" type="number" inputmode="numeric" value="30" min="5" max="120"></div>
+              <div class="hiit-input-group"><div class="hiit-input-label">Descanso (s)</div><input class="hiit-input" id="hiitRest" type="number" inputmode="numeric" value="15" min="5" max="120"></div>
+              <div class="hiit-input-group"><div class="hiit-input-label">Rounds</div><input class="hiit-input" id="hiitRounds" type="number" inputmode="numeric" value="8" min="1" max="30"></div>
+            </div>
+            <button class="btn-apply-hiit" onclick="applyCustomHiit()">Aplicar e Iniciar ▶</button>
+          </div>
+        </div>
+        <textarea class="notes-textarea" id="hiitNote" placeholder="Equipamento, sensações, FC..." style="margin-top:8px"></textarea>
+      </div>
+    </div>
+  `;
+}
+
+function createPhase(icon,title,open){
+  const b=document.createElement('div');
+  b.className=`phase-block ${open?'open':''}`;
+  b.innerHTML=`<div class="phase-header" onclick="this.parentElement.classList.toggle('open')"><div class="phase-icon">${icon}</div><div class="phase-title">${title}</div><div class="phase-chevron">▾</div></div><div class="phase-content"></div>`;
+  return b;
+}
+
+// ═══════════════════════════════════════════════════════════
+// INTERACTIONS
+// ═══════════════════════════════════════════════════════════
+function toggleWarmup(i){const e=document.getElementById(`wc${i}`);e.classList.toggle('done');e.textContent=e.classList.contains('done')?'✓':'';}
+function startWarmupTimer(i,dur){
+  if(warmupTimers[i]){clearInterval(warmupTimers[i]);delete warmupTimers[i];const b=document.getElementById(`wt${i}`);b.classList.remove('running');b.textContent=`▶ ${dur}s`;return;}
+  let r=dur;const b=document.getElementById(`wt${i}`);b.classList.add('running');
+  warmupTimers[i]=setInterval(()=>{r--;b.textContent=`${r}s`;if(r<=0){clearInterval(warmupTimers[i]);delete warmupTimers[i];b.classList.remove('running');b.textContent='✓ Pronto!';toggleWarmup(i);if('vibrate'in navigator)navigator.vibrate([200,100,200]);}},1000);
+}
+function toggleEx(ei){const c=document.getElementById(`ec${ei}`);c.classList.toggle('open');if(c.classList.contains('open')){c.classList.add('active');c.scrollIntoView({behavior:'smooth',block:'nearest'});}}
+function togglePosture(ei){document.getElementById(`pt${ei}`)?.classList.toggle('open');}
+function toggleSetDone(ei,s,total){
+  const b=document.getElementById(`sd_${ei}_${s}`);b.classList.toggle('done');
+  let all=true;for(let i=1;i<=total;i++)if(!document.getElementById(`sd_${ei}_${i}`).classList.contains('done')){all=false;break;}
+  if(all){document.getElementById(`en${ei}`).style.background='var(--green)';document.getElementById(`ec${ei}`).classList.add('done');}
+}
+function startRest(ei,sec){
+  clearInterval(restTimers[ei]);restRemaining[ei]=sec;
+  const d=document.getElementById(`rd${ei}`),b=document.getElementById(`rb${ei}`);
+  d.textContent=fmtTime(sec);b.textContent='⏸ Pausar';b.classList.add('running');
+  restTimers[ei]=setInterval(()=>{
+    restRemaining[ei]--;d.textContent=fmtTime(restRemaining[ei]);
+    if(restRemaining[ei]<=0){clearInterval(restTimers[ei]);d.textContent='0:00';b.textContent='▶ Iniciar';b.classList.remove('running');if('vibrate'in navigator)navigator.vibrate([300,100,300]);}
+  },1000);
+}
+function toggleRest(ei){
+  const b=document.getElementById(`rb${ei}`);
+  if(restTimers[ei]&&b.classList.contains('running')){clearInterval(restTimers[ei]);restTimers[ei]=null;b.textContent='▶ Continuar';b.classList.remove('running');}
+  else startRest(ei,restRemaining[ei]||90);
+}
+
+// CARDIO STEADY
+function setCardioMode(mode){
+  cardioMode=mode;
+  document.getElementById('modeStready').classList.toggle('active',mode==='steady');
+  document.getElementById('modeHiit').classList.toggle('active',mode==='hiit');
+  document.getElementById('panelSteady').classList.toggle('active',mode==='steady');
+  document.getElementById('panelHiit').classList.toggle('active',mode==='hiit');
+}
+function toggleCardio(){
+  const b=document.getElementById('cbs');
+  if(cardioRunning){clearInterval(cardioInterval);cardioRunning=false;b.textContent='▶ Continuar';b.className='cardio-btn start';}
+  else{cardioRunning=true;b.textContent='⏸ Pausar';b.className='cardio-btn pause';
+    cardioInterval=setInterval(()=>{
+      cardioElapsed++;document.getElementById('cardioDisplay').textContent=fmtTime(cardioElapsed,true);
+      if(cardioElapsed===currentDay.cardio.duration*60){if('vibrate'in navigator)navigator.vibrate([400,200,400,200,400]);b.textContent='✓ Concluído!';b.className='cardio-btn start';clearInterval(cardioInterval);cardioRunning=false;}
+    },1000);}
+}
+function resetCardio(){clearInterval(cardioInterval);cardioRunning=false;cardioElapsed=0;document.getElementById('cardioDisplay').textContent='00:00';document.getElementById('cbs').textContent='▶ Iniciar';document.getElementById('cbs').className='cardio-btn start';}
+
+// HIIT
+function selectHiitPreset(i){
+  document.querySelectorAll('.hiit-preset').forEach(p=>p.classList.remove('selected'));
+  document.getElementById(`hpreset${i}`).classList.add('selected');
+  const p=HIIT_PRESETS[i];
+  document.getElementById('hiitWork').value=p.work;
+  document.getElementById('hiitRest').value=p.rest;
+  document.getElementById('hiitRounds').value=p.rounds;
+  // show tip
+  let tip=document.getElementById('hiitPresetTip');
+  if(!tip){tip=document.createElement('div');tip.id='hiitPresetTip';tip.className='cardio-tip';document.getElementById('hiitSetup').insertBefore(tip,document.querySelector('.hiit-custom'));}
+  tip.textContent='💡 '+p.tip;
+  applyCustomHiit();
+}
+function applyCustomHiit(){
+  const work=parseInt(document.getElementById('hiitWork').value)||20;
+  const rest=parseInt(document.getElementById('hiitRest').value)||10;
+  const rounds=parseInt(document.getElementById('hiitRounds').value)||8;
+  hiitConfig={work,rest,rounds};
+  document.getElementById('hiitSetup').style.display='none';
+  document.getElementById('hiitActiveDisplay').style.display='block';
+  hiitCurrentRound=0;hiitPhase='work';hiitPhaseElapsed=0;hiitRunning=false;
+  updateHiitDisplay();
+}
+function updateHiitDisplay(){
+  if(!hiitConfig)return;
+  const isWork=hiitPhase==='work';
+  const total=isWork?hiitConfig.work:hiitConfig.rest;
+  const remaining=total-hiitPhaseElapsed;
+  document.getElementById('hiitDisplay').textContent=String(remaining).padStart(2,'0');
+  document.getElementById('hiitPhaseLabel').textContent=hiitPhase==='work'?'TRABALHO':'DESCANSO';
+  document.getElementById('hiitPhaseLabel').style.color=isWork?'var(--accent)':'var(--green)';
+  document.getElementById('hiitRoundLabel').textContent=`Round ${hiitCurrentRound}/${hiitConfig.rounds}`;
+  const pct=(hiitPhaseElapsed/total)*100;
+  document.getElementById('hiitProgressFill').style.width=pct+'%';
+  document.getElementById('hiitProgressFill').style.background=isWork?'var(--accent)':'var(--green)';
+}
+function toggleHiit(){
+  const b=document.getElementById('hiitStartBtn');
+  if(hiitRunning){clearInterval(hiitInterval);hiitRunning=false;b.textContent='▶ Continuar';b.className='cardio-btn start';}
+  else{
+    if(hiitCurrentRound===0)hiitCurrentRound=1;
+    hiitRunning=true;b.textContent='⏸ Pausar';b.className='cardio-btn pause';
+    hiitInterval=setInterval(()=>{
+      hiitPhaseElapsed++;
+      const total=hiitPhase==='work'?hiitConfig.work:hiitConfig.rest;
+      if(hiitPhaseElapsed>=total){
+        if('vibrate'in navigator)navigator.vibrate(hiitPhase==='work'?[100,50,100]:[300]);
+        if(hiitPhase==='work'){hiitPhase='rest';hiitPhaseElapsed=0;}
+        else{
+          hiitPhase='work';hiitPhaseElapsed=0;hiitCurrentRound++;
+          if(hiitCurrentRound>hiitConfig.rounds){
+            clearInterval(hiitInterval);hiitRunning=false;
+            document.getElementById('hiitDisplay').textContent='✓';
+            document.getElementById('hiitPhaseLabel').textContent='CONCLUÍDO!';
+            document.getElementById('hiitPhaseLabel').style.color='var(--green)';
+            document.getElementById('hiitStartBtn').textContent='✓ Feito!';
+            document.getElementById('hiitStartBtn').className='cardio-btn start';
+            if('vibrate'in navigator)navigator.vibrate([400,200,400,200,400,200,400]);
+            cardioElapsed=(hiitConfig.work+hiitConfig.rest)*hiitConfig.rounds;
+            return;
+          }
+        }
+      }
+      updateHiitDisplay();
+    },1000);
+  }
+}
+function resetHiit(){
+  clearInterval(hiitInterval);hiitRunning=false;
+  hiitCurrentRound=0;hiitPhase='work';hiitPhaseElapsed=0;
+  document.getElementById('hiitActiveDisplay').style.display='none';
+  document.getElementById('hiitSetup').style.display='block';
+  document.querySelectorAll('.hiit-preset').forEach(p=>p.classList.remove('selected'));
+  document.getElementById('hiitStartBtn').textContent='▶ Iniciar';
+  document.getElementById('hiitStartBtn').className='cardio-btn start';
+}
+
+// ═══════════════════════════════════════════════════════════
+// FINISH
+// ═══════════════════════════════════════════════════════════
+function finishSession(){
+  clearInterval(elapsedInterval);clearInterval(cardioInterval);clearInterval(hiitInterval);
+  const elapsed=Math.floor((Date.now()-sessionStartTime)/1000);
+  const totalSets=currentDay.exercises.reduce((a,e)=>a+e.sets,0);
+  let completedSets=0;
+  const exData=currentDay.exercises.map((ex,ei)=>{
+    let sets=[];
+    for(let s=1;s<=ex.sets;s++){
+      const done=document.getElementById(`sd_${ei}_${s}`)?.classList.contains('done');
+      sets.push({done,load:document.getElementById(`load_${ei}_${s}`)?.value||'',reps:document.getElementById(`reps_${ei}_${s}`)?.value||''});
+      if(done)completedSets++;
+    }
+    return{name:ex.name,sets:ex.sets,repsTarget:ex.reps,setData:sets,note:document.getElementById(`en_${ei}`)?.value||''};
+  });
+  const sessionNotes=document.getElementById('sessionNotes')?.value||'';
+  const cardioNote=(document.getElementById('cardioNote')?.value||'')+(document.getElementById('hiitNote')?.value||'');
+  const now=new Date();
+  const completion=Math.round(completedSets/totalSets*100);
+  const entry={
+    id:Date.now(),dayId:currentDay.id,dayLabel:currentDay.label,
+    dayName:currentDay.name,dayFocus:currentDay.focus,dayColor:currentDay.color,
+    date:now.toLocaleDateString('pt-BR'),dateTime:now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}),
+    dateTs:now.toISOString(),duration:fmtTime(elapsed,true),durationSec:elapsed,
+    completedSets,totalSets,completion,
+    cardioTime:fmtTime(cardioElapsed,true),cardioSec:cardioElapsed,
+    exercises:exData,sessionNotes,cardioNote,
+  };
+  addSession(entry);
+  document.getElementById('summarySubtitle').textContent=`${now.toLocaleDateString('pt-BR',{weekday:'long'})} · ${currentDay.focus}`;
+  document.getElementById('summaryStats').innerHTML=`
+    <div class="stat-box"><div class="stat-value">${fmtTime(elapsed,true)}</div><div class="stat-label">Duração</div></div>
+    <div class="stat-box"><div class="stat-value">${completedSets}/${totalSets}</div><div class="stat-label">Séries</div></div>
+    <div class="stat-box"><div class="stat-value">${fmtTime(cardioElapsed,true)}</div><div class="stat-label">Cardio</div></div>
+    <div class="stat-box"><div class="stat-value">${completion}%</div><div class="stat-label">Conclusão</div></div>
+  `;
+  const nd=document.getElementById('summaryNotes');
+  nd.innerHTML='<div class="summary-notes-title">Anotações</div>';
+  const notes=exData.filter(e=>e.note).map(e=>({t:e.name,n:e.note}));
+  if(cardioNote)notes.push({t:'🚴 Cardio',n:cardioNote});
+  if(sessionNotes)notes.push({t:'📝 Geral',n:sessionNotes});
+  if(!notes.length)nd.innerHTML+='<div style="color:var(--muted);font-size:12px">Nenhuma anotação.</div>';
+  else notes.forEach(a=>nd.innerHTML+=`<div class="summary-note-item"><div class="summary-note-day">${a.t}</div>${a.n}</div>`);
+  showScreen('summary');window.scrollTo(0,0);
+}
+
+// ═══════════════════════════════════════════════════════════
+// PDF
+// ═══════════════════════════════════════════════════════════
+function generateWeeklyPDF(){
+  const {jsPDF}=window.jspdf;
+  const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+  const W=210,H=297,M=14,CW=W-M*2;
+  const history=loadHistory();
+  const cutoff=new Date();cutoff.setDate(cutoff.getDate()-7);
+  const week=history.filter(s=>new Date(s.dateTs)>=cutoff);
+  const C={navy:[10,10,30],accent:[255,60,90],blue:[30,100,220],green:[40,180,100],muted:[100,100,128],light:[245,245,248],white:[255,255,255],border:[42,42,58],surface:[22,22,34]};
+  function sF(c){doc.setFillColor(...c)}function sT(c){doc.setTextColor(...c)}function sS(c){doc.setDrawColor(...c)}
+  function R(x,y,w,h,r=0){doc.roundedRect(x,y,w,h,r,r,'F')}
+  let y=0;
+  // Header
+  sF(C.navy);R(0,0,W,48);sF(C.accent);R(0,0,4,48);R(0,44,W,4);
+  sT(C.white);doc.setFont('helvetica','bold');doc.setFontSize(26);doc.text('FORGE',M,20);
+  doc.setFontSize(9);doc.setFont('helvetica','normal');doc.setTextColor(180,180,200);
+  doc.text('RELATÓRIO SEMANAL DE TREINO',M,28);
+  const now=new Date(),wa=new Date();wa.setDate(wa.getDate()-7);
+  doc.text(`${wa.toLocaleDateString('pt-BR')} — ${now.toLocaleDateString('pt-BR')}  ·  Gerado ${now.toLocaleDateString('pt-BR')} ${now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}`,M,35);
+  // KPIs
+  const done=week.length;
+  const kpis=[['Treinos',`${done}/5`],['Séries',week.reduce((a,s)=>a+s.completedSets,0).toString()],['Tempo',fmtTT(week.reduce((a,s)=>a+s.durationSec,0))],['Cardio',fmtTT(week.reduce((a,s)=>a+s.cardioSec,0))],['Conclusão',`${week.length?Math.round(week.reduce((a,s)=>a+s.completion,0)/week.length):0}%`]];
+  const kw=(CW-8)/kpis.length;y=52;
+  kpis.forEach(([l,v],i)=>{const x=M+i*(kw+2);sF(C.surface);R(x,y,kw,16,2);sT(C.accent);doc.setFont('helvetica','bold');doc.setFontSize(14);doc.text(v,x+kw/2,y+9,{align:'center'});sT(C.muted);doc.setFont('helvetica','normal');doc.setFontSize(7);doc.text(l,x+kw/2,y+14,{align:'center'});});
+  y+=21;
+  // Section fn
+  function sec(title){sF(C.accent);R(M,y,CW,7,1);sT(C.white);doc.setFont('helvetica','bold');doc.setFontSize(9);doc.text(title,M+4,y+5);y+=10;}
+  // Week sessions
+  sec('TREINOS DA SEMANA');
+  if(!week.length){sT(C.muted);doc.setFont('helvetica','italic');doc.setFontSize(9);doc.text('Nenhum treino nos últimos 7 dias.',M,y);y+=8;}
+  week.forEach(s=>{
+    if(y>H-28){doc.addPage();y=M;}
+    const dc=hexRgb(s.dayColor)||C.accent;
+    sF(dc);R(M,y,3,13,1);sF(C.surface);R(M+3,y,CW-3,13,1);
+    sT(dc);doc.setFont('helvetica','bold');doc.setFontSize(9);doc.text(s.dayLabel,M+7,y+5);
+    sT(C.white);doc.setFontSize(10);doc.text(s.dayName,M+19,y+5);
+    sT(C.muted);doc.setFont('helvetica','normal');doc.setFontSize(7.5);doc.text(s.dayFocus||'',M+19,y+9.5);
+    sT(C.white);doc.setFont('helvetica','bold');doc.setFontSize(7.5);doc.text(`${s.date} ${s.dateTime}`,W-M,y+5,{align:'right'});
+    sT(C.muted);doc.setFont('helvetica','normal');doc.setFontSize(7);doc.text(`⏱${s.duration}  ✓${s.completedSets}/${s.totalSets}  🚴${s.cardioTime}  ${s.completion}%`,W-M,y+9.5,{align:'right'});
+    y+=14;
+    s.exercises.forEach(ex=>{
+      if(y>H-16){doc.addPage();y=M;}
+      const allDone=ex.setData.every(d=>d.done);
+      sF(allDone?[18,55,30]:[28,28,42]);R(M+3,y,CW-3,7.5,1);
+      sT(allDone?C.green:C.muted);doc.setFont('helvetica','bold');doc.setFontSize(7);doc.text(allDone?'✓':'·',M+6,y+5);
+      sT(allDone?[190,255,210]:C.white);doc.setFontSize(7.5);doc.text(ex.name,M+11,y+5);
+      const si=ex.setData.map((d,i)=>d.done?`S${i+1}:${d.load||'?'}×${d.reps||'?'}`:'').filter(Boolean).join('  ');
+      sT(C.muted);doc.setFont('helvetica','normal');doc.setFontSize(6.5);doc.text(si,W-M,y+5,{align:'right'});
+      y+=8.5;
+      if(ex.note){if(y>H-12){doc.addPage();y=M;}sF([15,20,32]);R(M+3,y,CW-3,7,1);sF(C.blue);R(M+3,y,2,7,1);sT([160,180,220]);doc.setFont('helvetica','italic');doc.setFontSize(6.5);doc.text(doc.splitTextToSize('💬 '+ex.note,CW-14)[0],M+7,y+4.5);y+=8;}
+    });
+    if(s.sessionNotes||s.cardioNote){if(y>H-14){doc.addPage();y=M;}sF([12,22,38]);R(M+3,y,CW-3,9,1);sF(C.blue);R(M+3,y,2,9,1);sT(C.blue);doc.setFont('helvetica','bold');doc.setFontSize(7);doc.text('NOTAS',M+7,y+4);sT([180,200,240]);doc.setFont('helvetica','normal');doc.setFontSize(7);const cn=[s.cardioNote?'🚴 '+s.cardioNote:'',s.sessionNotes?'📝 '+s.sessionNotes:''].filter(Boolean).join(' · ');doc.text(doc.splitTextToSize(cn,CW-22)[0],M+7,y+8);y+=11;}
+    y+=3;
+  });
+  // History table
+  if(y>H-45){doc.addPage();y=M;}y+=3;sec('HISTÓRICO — ÚLTIMAS SESSÕES');
+  const cols=[22,38,22,22,20,20,26];const hds=['Data','Treino','Duração','Séries','Cardio','%','Status'];
+  sF(C.navy);R(M,y,CW,7,1);sT(C.white);doc.setFont('helvetica','bold');doc.setFontSize(7);
+  let cx=M+2;hds.forEach((h,i)=>{doc.text(h,cx,y+4.5);cx+=cols[i];});y+=8;
+  history.slice(0,12).forEach((s,idx)=>{if(y>H-14){doc.addPage();y=M;}sF(idx%2===0?C.surface:[14,14,22]);R(M,y,CW,7,0);cx=M+2;const row=[s.date+' '+s.dateTime,s.dayName.slice(0,14),s.duration,`${s.completedSets}/${s.totalSets}`,s.cardioTime,s.completion+'%',s.completion>=80?'✓ OK':'~ Parcial'];row.forEach((v,i)=>{sT(i===6&&s.completion>=80?C.green:C.white);doc.setFont('helvetica',i===6?'bold':'normal');doc.setFontSize(6.5);doc.text(v,cx,y+4.5);cx+=cols[i];});y+=8;});
+  // Coach block
+  if(y>H-55){doc.addPage();y=M;}y+=6;sec('RESUMO PARA O COACH');
+  sF([10,18,32]);R(M,y,CW,52,2);sF(C.blue);R(M,y,3,52,1);
+  sT(C.blue);doc.setFont('helvetica','bold');doc.setFontSize(8);doc.text('Compartilhe este bloco com seu coach para atualização do programa:',M+6,y+7);
+  sT([155,178,215]);doc.setFont('helvetica','normal');doc.setFontSize(8);
+  const lines=[`• Treinos realizados: ${done}/5`,`• Séries totais: ${week.reduce((a,s)=>a+s.completedSets,0)}`,`• Tempo total: ${fmtTT(week.reduce((a,s)=>a+s.durationSec,0))}`,`• Cardio total: ${fmtTT(week.reduce((a,s)=>a+s.cardioSec,0))}`,`• Conclusão média: ${week.length?Math.round(week.reduce((a,s)=>a+s.completion,0)/week.length):0}%`,`• Total histórico: ${history.length} sessões`];
+  lines.forEach((l,i)=>doc.text(l,M+6,y+15+i*6));
+  sT(C.muted);doc.setFont('helvetica','italic');doc.setFontSize(7.5);doc.text('Observações:',M+6,y+57);sS(C.border);doc.setLineWidth(0.3);
+  for(let i=0;i<2;i++)doc.line(M+6,y+63+i*8,M+CW-4,y+63+i*8);
+  // Footer
+  const pages=doc.internal.getNumberOfPages();
+  for(let p=1;p<=pages;p++){doc.setPage(p);sF(C.navy);R(0,H-9,W,9);sF(C.accent);R(0,H-9,44,9);sT(C.white);doc.setFont('helvetica','bold');doc.setFontSize(7);doc.text('FORGE · Guia de Treino',M,H-3.5);sT([150,150,180]);doc.setFont('helvetica','normal');doc.text('Recomposição · Condicionamento · Mobilidade',W/2,H-3.5,{align:'center'});doc.text(`Pág. ${p}/${pages}`,W-M,H-3.5,{align:'right'});}
+  doc.save(`FORGE_Relatorio_${now.toISOString().slice(0,10)}.pdf`);
+}
+
+// ═══════════════════════════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════════════════════════
+function fmtTime(s,full=false){const m=Math.floor(s/60),sc=s%60;if(full)return`${String(m).padStart(2,'0')}:${String(sc).padStart(2,'0')}`;return`${m}:${String(sc).padStart(2,'0')}`;}
+function fmtTT(s){const h=Math.floor(s/3600),m=Math.floor((s%3600)/60);return h>0?`${h}h${String(m).padStart(2,'0')}m`:`${m}m`;}
+function hexRgb(h){if(!h)return null;return[parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)];}
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');}
+function goHome(){
+  clearInterval(elapsedInterval);clearInterval(cardioInterval);clearInterval(hiitInterval);
+  Object.values(warmupTimers).forEach(t=>clearInterval(t));
+  Object.values(restTimers).forEach(t=>clearInterval(t));
+  renderHome();showScreen('home');
+}
+
+// ═══════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════
+renderHome();
+window.addEventListener('load',()=>{setTimeout(()=>{const s=document.getElementById('splash');s.style.opacity='0';setTimeout(()=>s.style.display='none',500);},1800);});
+setTimeout(()=>{const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent);if(isIOS&&!window.navigator.standalone&&!localStorage.getItem('forge_install_dismissed')){const b=document.getElementById('installBanner');b.style.display='flex';setTimeout(()=>b.style.display='none',12000);}},2500);
+</script>
+</body>
+</html>
